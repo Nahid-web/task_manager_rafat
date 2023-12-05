@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_caller.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_response.dart';
 import 'package:task_manager_rafat/data/utility/urls.dart';
@@ -154,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
 
       );
+
       _isLogInProgress = false;
       if(mounted){
         setState(() {
@@ -161,6 +163,9 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
       if(response.isSuccess){
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        await sharedPreferences.setString('token', response.jsonResponse['token']);
+
         if(mounted){
           _clearLogInField();
           snackMessage(context, 'Log in successful ');

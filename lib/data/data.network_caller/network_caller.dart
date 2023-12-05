@@ -31,6 +31,7 @@ class NetworkCaller {
       }
     } catch (e) {
       return NetworkResponse(isSuccess: false, errorMessage: e.toString(),);
+
     }
   }
 }
