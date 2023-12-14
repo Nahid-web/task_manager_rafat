@@ -1,18 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:task_manager_rafat/ui/screens/edit_profile_screen.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
-class ProfileSummaryTile extends StatelessWidget {
-  const ProfileSummaryTile({
-    super.key,
-    this.enableOnTap = true
-  });
+import 'package:flutter/material.dart';
+import 'package:task_manager_rafat/ui/controller/auth_controller.dart';
+import 'package:task_manager_rafat/ui/screens/edit_profile_screen.dart';
+import 'package:task_manager_rafat/ui/screens/login_screen.dart';
+
+class ProfileSummaryTile extends StatefulWidget {
+  const ProfileSummaryTile({super.key, this.enableOnTap = true});
+
   final bool enableOnTap;
 
   @override
+  State<ProfileSummaryTile> createState() => _ProfileSummaryTileState();
+}
+
+class _ProfileSummaryTileState extends State<ProfileSummaryTile> {
+  @override
   Widget build(BuildContext context) {
+   Uint8List imageBytes = const Base64Decoder().convert(AuthController.user!.photo ?? '');
     return ListTile(
       onTap: () {
-        if(enableOnTap){
+        if (widget.enableOnTap) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -23,20 +32,38 @@ class ProfileSummaryTile extends StatelessWidget {
       },
       tileColor: Colors.green,
       leading: CircleAvatar(
-        child: Icon(Icons.person),
+        radius: 20,
+        child: AuthController.user?.photo == null ? const Icon(Icons.person) :
+        ClipOval(child: Image.memory(imageBytes)),
       ),
       title: Text(
-        'Nahid Amin',
+        fullName,
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
       subtitle: Text(
-        'nahidamin@gmail.com',
+        '${AuthController.user?.email}',
         style: TextStyle(fontSize: 10, color: Colors.white),
       ),
-      trailing: enableOnTap ? const Icon(Icons.arrow_forward) : const Text(''),
+      trailing: IconButton(
+        onPressed: () async {
+          await AuthController.clearAuthData();
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+                (route) => false);
+          }
+        },
+        icon: const Icon(Icons.logout),
+      ),
     );
+  }
+  get fullName{
+    return '${AuthController.user?.firstName} ${AuthController.user?.lastName}';
   }
 }

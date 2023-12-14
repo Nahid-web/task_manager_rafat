@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager_rafat/ui/controller/auth_controller.dart';
 
 
 import 'package:task_manager_rafat/ui/screens/login_screen.dart';
@@ -15,14 +16,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   Future<void> gotoLogin() async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String? token = sharedPreferences.getString('token');
+   final bool isLoggedIn = await AuthController.checkAuthState();
     Future.delayed(const Duration(seconds: 2)).then((value) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => token == null ? const LoginScreen() : const MainBottomNavScreen(),
+          builder: (context) => isLoggedIn ? const MainBottomNavScreen() : const LoginScreen(),
         ),
       );
     });

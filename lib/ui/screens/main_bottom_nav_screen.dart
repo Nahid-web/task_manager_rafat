@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_rafat/ui/screens/canceled_tasks_screen.dart';
+import 'package:task_manager_rafat/ui/screens/cancelled_tasks_screen.dart';
 import 'package:task_manager_rafat/ui/screens/completed_tasks_screen.dart';
 import 'package:task_manager_rafat/ui/screens/new_tasks_screen.dart';
 import 'package:task_manager_rafat/ui/screens/progress_tasks_screen.dart';

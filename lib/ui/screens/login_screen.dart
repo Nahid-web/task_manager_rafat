@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_caller.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_response.dart';
+import 'package:task_manager_rafat/data/models/user_model.dart';
 import 'package:task_manager_rafat/data/utility/urls.dart';
+import 'package:task_manager_rafat/ui/controller/auth_controller.dart';
 import 'package:task_manager_rafat/ui/screens/forget_password_screen.dart';
 import 'package:task_manager_rafat/ui/screens/main_bottom_nav_screen.dart';
 import 'package:task_manager_rafat/ui/screens/signup_screen.dart';
@@ -142,31 +143,29 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _logIn() async {
     if (_formKey.currentState!.validate()) {
       _isLogInProgress = true;
-      if(mounted){
-        setState(() {
-
-        });
+      if (mounted) {
+        setState(() {});
       }
       final NetworkResponse response = await NetworkCaller().postRequest(
         Urls.logIn,
         body: {
-            "email": _emailTEController.text,
-            "password": _passwordTEController.text,
+          "email": _emailTEController.text,
+          "password": _passwordTEController.text,
         },
+        isLogin: true
 
       );
 
       _isLogInProgress = false;
-      if(mounted){
-        setState(() {
-
-        });
+      if (mounted) {
+        setState(() {});
       }
-      if(response.isSuccess){
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        await sharedPreferences.setString('token', response.jsonResponse['token']);
-
-        if(mounted){
+      if (response.isSuccess) {
+        await AuthController.saveUserInformation(
+          response.jsonResponse['token'],
+          UserModel.fromJson(response.jsonResponse['data']),
+        );
+        if (mounted) {
           _clearLogInField();
           snackMessage(context, 'Log in successful ');
           Navigator.push(
@@ -177,16 +176,15 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } else {
-        if(mounted){
-          snackMessage(context, 'Log In Failed . Check email and password' , true);
+        if (mounted) {
+          snackMessage(
+              context, 'Log In Failed . Check email and password', true);
         }
       }
-
-
     }
   }
 
-  void _clearLogInField(){
+  void _clearLogInField() {
     _emailTEController.clear();
     _passwordTEController.clear();
   }

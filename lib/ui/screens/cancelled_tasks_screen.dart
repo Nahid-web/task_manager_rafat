@@ -7,37 +7,33 @@ import '../../data/utility/urls.dart';
 import '../widgets/profile_summary_tile.dart';
 import '../widgets/task_item_card.dart';
 
-class ProgressTaskScreen extends StatefulWidget {
-  const ProgressTaskScreen({super.key});
+class CanceledTasksScreen extends StatefulWidget {
+  const CanceledTasksScreen({super.key});
 
   @override
-  State<ProgressTaskScreen> createState() => _ProgressTaskScreenState();
+  State<CanceledTasksScreen> createState() => _CanceledTasksScreenState();
 }
 
-class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
+class _CanceledTasksScreenState extends State<CanceledTasksScreen> {
   TaskListModel taskListModel = TaskListModel();
-  bool isProgressTaskProgress = false;
-  Future<void> getProgressTaskList() async {
-    isProgressTaskProgress = true;
+  bool isCanceledTaskProgress = false;
+  Future<void> getCancelledTaskList() async {
+    isCanceledTaskProgress = true;
     setState(() {
 
     });
-   NetworkResponse response  = await NetworkCaller().getRequest(Urls.getProgressTaskList);
+   NetworkResponse response = await NetworkCaller().getRequest(Urls.getCancelledTaskList);
    if(response.isSuccess){
      taskListModel = TaskListModel.fromJson(response.jsonResponse);
-     setState(() {
-
-     });
    }
-   isProgressTaskProgress = false;
+   isCanceledTaskProgress = false;
    setState(() {
 
    });
   }
-
   @override
   void initState() {
-    getProgressTaskList();
+    getCancelledTaskList();
     super.initState();
   }
   @override
@@ -48,20 +44,21 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
           children: [
             const ProfileSummaryTile(),
             Expanded(
-              child: Visibility(
-                visible: isProgressTaskProgress == false,
-                replacement: const Center(child: CircularProgressIndicator()),
-                child: RefreshIndicator(
-                  onRefresh: getProgressTaskList,
+              child: RefreshIndicator(
+                onRefresh: getCancelledTaskList,
+                child: Visibility(
+                  visible: isCanceledTaskProgress == false,
+                  replacement: const Center(child: CircularProgressIndicator()),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
                       itemCount: taskListModel.taskList?.length ?? 0,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return TaskItemCard(task: taskListModel.taskList![index],
+                        return TaskItemCard(
+                            task: taskListModel.taskList![index],
                             onStatusChange: (){
-                          getProgressTaskList();
+                              getCancelledTaskList();
                             });
                       },
                     ),
