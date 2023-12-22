@@ -73,7 +73,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const ProfileSummaryTile(),
+            // const ProfileSummaryTile(),
             Visibility(
               visible: isTaskCountSummaryProgress == false,
               replacement: const LinearProgressIndicator(),

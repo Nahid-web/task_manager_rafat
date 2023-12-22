@@ -38,14 +38,14 @@ class _ProfileSummaryTileState extends State<ProfileSummaryTile> {
       ),
       title: Text(
         fullName,
-        style: TextStyle(
+        style: const  TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
       subtitle: Text(
         '${AuthController.user?.email}',
-        style: TextStyle(fontSize: 10, color: Colors.white),
+        style: const TextStyle(fontSize: 10, color: Colors.white),
       ),
       trailing: IconButton(
         onPressed: () async {
