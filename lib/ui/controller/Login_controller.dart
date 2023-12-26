@@ -25,7 +25,7 @@ Future<bool> logIn(String email, String password) async{
   _loginInProgress = false;
   update();
       if(response.isSuccess){
-        await AuthController.saveUserInformation(
+        await Get.find<AuthController>().saveUserInformation(
           response.jsonResponse['token'],
           UserModel.fromJson(response.jsonResponse['data']),
         );

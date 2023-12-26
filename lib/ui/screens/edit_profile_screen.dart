@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_caller.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_response.dart';
 import 'package:task_manager_rafat/data/models/user_model.dart';
@@ -28,6 +29,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
 
+  AuthController authController = Get.find<AuthController>();
+
   XFile? photo ;
 
   Future<void> updateProfile() async {
@@ -49,12 +52,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     NetworkResponse response = await NetworkCaller().postRequest(Urls.updateProfile,
         body: inputDate);
     if(response.isSuccess){
-      AuthController.updateUserInformation(UserModel(
+      authController.updateUserInformation(UserModel(
         email: _emailTEController.text.trim(),
         firstName: _firstNameTEController.text.trim(),
         lastName: _lastNameTEController.text.trim(),
         mobile: _mobileTEController.text.trim(),
-        photo: photoBase64 ?? AuthController.user?.photo,
+        photo: photoBase64 ?? authController.user?.photo,
       ));
       if(mounted){
         snackMessage(context, 'Update Profile successful');
@@ -71,10 +74,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _emailTEController.text = AuthController.user?.email ?? '';
-    _firstNameTEController.text = AuthController.user?.firstName ?? '';
-    _lastNameTEController.text = AuthController.user?.lastName ?? '';
-    _mobileTEController.text = AuthController.user?.mobile ?? '';
+    _emailTEController.text = authController.user?.email ?? '';
+    _firstNameTEController.text = authController.user?.firstName ?? '';
+    _lastNameTEController.text = authController.user?.lastName ?? '';
+    _mobileTEController.text = authController.user?.mobile ?? '';
   }
 
   @override

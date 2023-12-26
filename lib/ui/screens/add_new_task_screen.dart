@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_caller.dart';
 import 'package:task_manager_rafat/data/data.network_caller/network_response.dart';
+import 'package:task_manager_rafat/ui/controller/new_task_controller.dart';
 import 'package:task_manager_rafat/ui/screens/new_tasks_screen.dart';
 import 'package:task_manager_rafat/ui/widgets/body_background.dart';
 import 'package:task_manager_rafat/ui/widgets/profile_summary_tile.dart';
@@ -29,7 +31,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const ProfileSummaryTile(),
+            // const ProfileSummaryTile(),
             Expanded(
               child: BodyBackground(
                 child: Padding(
@@ -79,11 +81,10 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                           ),
                           Visibility(
                             visible: _isProgress == false,
-                            replacement: const Center(child: CircularProgressIndicator()),
+                            replacement: const Center(
+                                child: CircularProgressIndicator()),
                             child: ElevatedButton(
-                              onPressed: (){
-                                addNewTask;
-                              },
+                              onPressed: addNewTask,
                               child:
                                   const Icon(Icons.arrow_circle_right_outlined),
                             ),
@@ -101,12 +102,10 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     );
   }
 
-  void addNewTask() async {
+  Future<void> addNewTask() async {
     if (_formKey.currentState!.validate()) {
       _isProgress = true;
-      setState(() {
-
-      });
+      setState(() {});
       final NetworkResponse response =
           await NetworkCaller().postRequest(Urls.addNewTask, body: {
         "title": _subjectTEController.text.trim(),
@@ -114,26 +113,23 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         "status": "New"
       });
       _isProgress = false;
-      setState(() {
-
-      });
+      setState(() {});
 
       if (response.isSuccess) {
-        const NewTasksScreen();
         _subjectTEController.clear();
         _descriptionTEController.clear();
-        if(mounted){
+        Get.find<NewTaskController>().getNewTaskList();
+        if (mounted) {
           snackMessage(context, 'Add new Task Successful');
         }
-      }
-      else {
-        if(mounted){
+      } else {
+        if (mounted) {
           snackMessage(context, 'Add New task failed');
         }
       }
     }
   }
-  
+
   @override
   void dispose() {
     _subjectTEController.dispose();

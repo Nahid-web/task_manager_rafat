@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:task_manager_rafat/data/data.network_caller/network_response.dart';
 import 'package:task_manager_rafat/ui/controller/auth_controller.dart';
@@ -98,7 +99,7 @@ class NetworkCaller {
   }
 
   Future<void> backToLogin() async {
-    await AuthController.clearAuthData();
+    await Get.find<AuthController>().clearAuthData();
     Navigator.pushAndRemoveUntil(
         MyApp.navigationKey.currentContext!,
         MaterialPageRoute(
